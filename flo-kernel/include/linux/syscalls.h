@@ -63,6 +63,7 @@ struct getcpu_cache;
 struct old_linux_dirent;
 struct perf_event_attr;
 struct file_handle;
+struct gps_location;
 
 #include <linux/types.h>
 #include <linux/aio_abi.h>
@@ -858,4 +859,7 @@ asmlinkage long sys_process_vm_writev(pid_t pid,
 				      unsigned long riovcnt,
 				      unsigned long flags);
 
+asmlinkage long sys_set_gps_location(struct gps_location __user *loc);
+asmlinkage long sys_get_gps_location(const char __user *pathname,
+				     struct gps_location __user *loc);
 #endif
