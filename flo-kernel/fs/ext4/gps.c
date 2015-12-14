@@ -13,7 +13,7 @@ int ext4_set_gps_location(struct inode *inode)
 		return -ENODEV;
 	longitude = get_longitude();
 	latitude = get_latitude();	
-	accuracy = get+accuracy();
+	accuracy = get_accuracy();
 	age = CURRENT_TIME_SEC.tv_sec - location_time();
 
 	write_lock(&ei->s_lock);
