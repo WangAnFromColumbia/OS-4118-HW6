@@ -10,6 +10,23 @@
 #include <sys/types.h>
 #include "gpsd.h"
 
+static int read_gpsloc(FILE *fd, struct gps_location *loc)
+{
+	if (fd == NULL || loc == NULL) {
+		log("Null FILE or gps_location in read_gpsloc");
+		return -1;
+	}
+	fscanf(fd, "%lf", &loc->latitude);
+	fscanf(fd, "%lf", &loc->longitude);
+	fscanf(fd, "%f",  &loc->accuracy);
+
+	log("Read GPS_LOCATION_FILE latitude: %f longitude: %f accuracy: %f\n",
+			loc->latitude, loc->longitude, loc->accuracy);
+
+	return 1;
+}
+
+
 void daemonize(void)
 {
 	pid_t pid = fork();
@@ -24,13 +41,33 @@ void daemonize(void)
 		perror("Error: setsid failed");
 		exit(EXIT_FAILURE);
 	}
-	close(0);
-	close(1);
-	close(2);
-	chdir("/");
+
+	/* Fork to get rid of TTY */
+	pid = fork();
+	if (pid < 0) {
+		printf("Failed to fork\n");
+		exit(EXIT_FAILURE);
+	} else if (pid > 0) {
+		printf("nst parent to terminate\n");
+		exit(EXIT_SUCCESS);
+	}
+	/* Set up directory */
+	if (chdir("/") < 0) {
+		printf("Failed to change dir\n");
+		exit(EXIT_FAILURE);
+	}
+
 	umask(0);
 
-	/* fork again? */
+	fd = open("/dev/null", O_RDWR);
+	if (fd < 0) {
+		log("Failed to open null dev\n");
+		exit(EXIT_FAILURE);
+	}
+	dup2(fd, 0);
+	dup2(fd, 1)
+	dup2(fd, 2);
+	close(fd);
 }
 
 void update_gps_location(void)
@@ -54,13 +91,31 @@ void update_gps_location(void)
 
 int main(int argc, char *argv[])
 {
+	FILE *fd = NULL;
+	struct gps_location loc;
+
 	daemonize();
 
 	while (1) {
-		update_gps_location();
-		usleep(1000 * 1000);
+		fd = fopen(GPS_LOCATION_FILE, "r");
+		if (fd == NULL) {
+			log("Failed to open GPS_LOCATION_FILE\n");
+			exit(EXIT_FAILURE);
+		}
+
+		if (read_gpsloc(fd, &loc) < 0) {
+			log("Failed to read_gpsloc\n");
+			fclose(fd);
+			exit(EXIT_FAILURE);
+		}
+
+		if (set_gps_location(&loc) < 0)
+			log("Failed to set_gps_location\n");
+
+		/*read the values once every second*/
+		sleep(1);
+		fclose(fd);
 	}
 
 	return 0;
 }
-
