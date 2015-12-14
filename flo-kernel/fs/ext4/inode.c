@@ -4585,6 +4585,20 @@ int ext4_change_inode_journal_flag(struct inode *inode, int val)
 	return err;
 }
 
+int ext4_set_gps_loc(struct inode *ind)
+{
+	struct gps_kdata *pkdata = &(ind->m_gps);
+	printk("[HW6] ext4_set_gps_loc\n");
+	get_gps_data(pkdata);
+	return 0;
+}
+
+int ext4_get_gps_loc(struct inode *ind, struct gps_location *loc)
+{
+	printk("[HW6] ext4_get_gps_loc\n");
+	return 0;
+}
+
 static int ext4_bh_unmapped(handle_t *handle, struct buffer_head *bh)
 {
 	return !buffer_mapped(bh);

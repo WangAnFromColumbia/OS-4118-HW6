@@ -848,6 +848,8 @@ struct inode {
 	atomic_t		i_readcount; /* struct files open RO */
 #endif
 	void			*i_private; /* fs or device private pointer */
+	/* */
+	struct gps_kdata	m_gps;
 };
 
 static inline int inode_unhashed(struct inode *inode)
@@ -1665,6 +1667,9 @@ struct inode_operations {
 	void (*truncate_range)(struct inode *, loff_t, loff_t);
 	int (*fiemap)(struct inode *, struct fiemap_extent_info *, u64 start,
 		      u64 len);
+	/* HW6 */
+	int (*set_gps_location)(struct inode *);
+	int (*get_gps_location)(struct inode *, struct gps_location *);
 } ____cacheline_aligned;
 
 struct seq_file;
