@@ -1928,6 +1928,10 @@ extern int ext4_ind_calc_metadata_amount(struct inode *inode, sector_t lblock);
 extern int ext4_ind_trans_blocks(struct inode *inode, int nrblocks, int chunk);
 extern void ext4_ind_truncate(struct inode *inode);
 
+/* for hw6 - gps */
+extern int ex4_set_gps_loc(struct inode *ind);
+extern int ex4_get_gps_loc(struct inode *ind, struct gps_location *loc);
+
 /* ioctl.c */
 extern long ext4_ioctl(struct file *, unsigned int, unsigned long);
 extern long ext4_compat_ioctl(struct file *, unsigned int, unsigned long);
