@@ -27,5 +27,17 @@ int ext4_set_gps_location(struct inode *inode)
 
 int ext4_get_gps_location(struct inode *inode, struct gps_location *location)
 {
+	struct gps_location loc;
+	struct ext4_inode_info *ei = EXT4_I(inode);
+	if (!ei)
+		return -ENODEV;
+	
+	read_lock(&ei->s_lock);
+	memcpy(&loc.latitude, &ei->i_latitude, sizeof(unsigned long long));
+	memcpy(&loc.longitude, &ei->i_longitude, sizeof(unsigned long long));
+	memcpy(&loc.accuracy, &ei->i_accuracy, sizeof(unsigned int));
+	memcpy(location, &loc, sizeof(loc));
+	read_unlock(&ei->s_lock);
+
 	return 0;
 }
