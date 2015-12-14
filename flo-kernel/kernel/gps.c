@@ -1,5 +1,7 @@
 #include <linux/gps.h>
 
+static struct gps_location location;
+
 SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc)
 {
 	struct gps_location k_loc;
@@ -14,4 +16,24 @@ SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc)
 SYSCALL_DEFINE2(get_gps_location, const char __user *, pathname, struct gps_location __user *, loc)
 {
 
+}
+
+long long get_longitude()
+{
+	return location.longitude;
+}
+
+long long get_latitude()
+{
+	return location.latitude;
+}
+
+long get_accuracy()
+{
+	return location.accuracy;
+}
+
+long location_time()
+{
+	return location.time;
 }
