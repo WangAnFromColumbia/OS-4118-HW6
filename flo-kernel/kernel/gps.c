@@ -5,7 +5,12 @@
 #include <linux/time.h>
 
 
-static struct gps_kdata s_kdata;
+static struct gps_kdata s_kdata = {
+    .m_lat = {0, 0, 0, 0, 0, 0, 0},
+    .m_lon = {0, 0, 0, 0, 0, 0, 0},
+    .m_acc = {0, 0, 0, 0},
+    .m_age = {0, 0, 0, 0},
+};
 static DEFINE_RWLOCK(s_lock);
 
 SYSCALL_DEFINE1(set_gps_location, struct gps_location __user*, loc)
