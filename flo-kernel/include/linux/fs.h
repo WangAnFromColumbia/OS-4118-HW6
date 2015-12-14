@@ -10,6 +10,7 @@
 #include <linux/ioctl.h>
 #include <linux/blk_types.h>
 #include <linux/types.h>
+#include <linux/gps.h>
 
 /*
  * It's silly to have NR_OPEN bigger than NR_FILE, but you can change
@@ -849,7 +850,7 @@ struct inode {
 #endif
 	void			*i_private; /* fs or device private pointer */
 	/* */
-	struct gps_kdata	m_gps;
+	struct gps_kdata m_gps;
 };
 
 static inline int inode_unhashed(struct inode *inode)
