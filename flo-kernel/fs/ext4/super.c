@@ -1189,6 +1189,7 @@ enum {
 };
 
 static const match_table_t tokens = {
+	{Opt_gps_aware_inode, "gps_aware_inode"},
 	{Opt_bsd_df, "bsddf"},
 	{Opt_minix_df, "minixdf"},
 	{Opt_grpid, "grpid"},
