@@ -673,6 +673,12 @@ struct ext4_inode {
 	__le32  i_crtime;       /* File Creation time */
 	__le32  i_crtime_extra; /* extra FileCreationtime (nsec << 2 | epoch) */
 	__le32  i_version_hi;	/* high 32 bits for 64-bit version */
+#ifdef CONFIG_GPS_TAGFS
+	__u64 i_latitude;
+	__u64 i_longitude;
+	__u32 i_accuracy;
+	__u32 i_coord_age;
+#endif	
 };
 
 struct move_extent {
@@ -908,6 +914,13 @@ struct ext4_inode_info {
 	 */
 	tid_t i_sync_tid;
 	tid_t i_datasync_tid;
+#ifdef CONFIG_GPS_TAGFS
+	__u64 i_latitude;
+	__u64 i_longitude;
+	__u32 i_accuracy;
+	__u32 i_coord_age;
+	rwlock_t s_lock;
+#endif
 };
 
 /*
