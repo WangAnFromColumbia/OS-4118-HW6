@@ -49,6 +49,5 @@ void get_gps_data(struct gps_kdata *data)
     memcpy(data->m_acc, s_kdata.m_acc, sizeof(float));
     memcpy(data->m_age, s_kdata.m_age, sizeof(unsigned long));
 
-
     read_unlock(&s_lock);
 }
