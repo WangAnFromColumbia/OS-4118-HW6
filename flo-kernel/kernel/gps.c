@@ -4,27 +4,28 @@
 #include <linux/uaccess.h>
 #include <linux/syscalls.h>
 #include <linux/rwlock.h>
+#include <linux/slab.h>
 
-static struct gps_location location;
+static struct gps_location location = {
+	.latitude = 0,
+	.longitude = 0,
+	.accuracy = 0,
+};
 static DEFINE_RWLOCK(s_lock);
 
 SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc)
 {
-    long retval = 0;
-    unsigned long gps_loc_size = sizeof(struct gps_location);
-    struct gps_location kloc;
 
-    if (loc == NULL)
-        return -EINVAL;
+    	long retval = 0;
+	struct gps_location k_loc;
+ 	if (loc == NULL)
+ 		return -EINVAL;
+	if(!copy_from_user(&k_loc, loc, sizeof(k_loc)))
+ 		return -EFAULT;
 
-    if (copy_from_user(&kloc, loc, gps_loc_size) != gps_loc_size) {
-        printk("copy from user failure!\n");
-        return -EINVAL;
-    }
-
+	/*use lock to copy gps_location from userspace to the struct stored in kernel*/
     write_lock(&s_lock);
-    memcpy(&location, &loc, sizeof(double));
-    location.time = CURRENT_TIME_SEC.tv_sec;
+    memcpy(&location, &loc, sizeof(struct gps_location));
     write_unlock(&s_lock);
 
     return retval;
