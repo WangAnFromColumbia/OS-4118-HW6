@@ -17,4 +17,5 @@ adb shell ln -s /dev/block/loop7 /dev/loop7
 adb push hmwk6.fs /data/misc
 adb shell mkdir /data/misc/hmwk6
 
-adb shell mount -o loop,gps_aware_inode -t ext4 /data/misc/hmwk6.fs /data/misc/hmwk6
+adb shell mount -o loop, gps_aware_inode -t ext4 /data/misc/hmwk6.fs /data/misc/hmwk6
+adb shell mount -o loop -t ext4 /data/misc/hmwk6.fs /data/misc/hmwk6

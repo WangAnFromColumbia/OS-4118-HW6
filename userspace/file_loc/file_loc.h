@@ -10,15 +10,15 @@
 #include <sys/syscall.h>
 
 struct gps_location {
-    double latitude;
-    double longitude;
-    float  accuracy;
+	double latitude;
+	double longitude;
+	float  accuracy;
 };
 
 static inline int get_gps_location(const char *pathname,
-                   struct gps_location *loc)
+				   struct gps_location *loc)
 {
-    return syscall(__NR_get_gps_location, pathname, loc);
+	return syscall(__NR_get_gps_location, pathname, loc);
 }
 
 #endif
