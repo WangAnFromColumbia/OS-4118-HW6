@@ -1,0 +1,67 @@
+COMS W4118 Operating Systems Columbia University
+Team 18
+
+Intro
+----------
+This homework consists of three parts:
+1) Implement 2 new system calls to update the gps location of the device, and a daemon reads the GPS sensor from a file created by the customed Android application given.
+
+2) Modify the EXT4 file system to add support for GPS manipulation and inode operations.
+
+3) Create a modified ext4 filesystem using the mke2fs program, and write a user space utility which outputs a file's location information including latitude, longitude, data age, and a like to Google Maps.
+
+How to test
+----------
+1) Make a new ext4 file system using the mke2fs:
+w4118@w4118:~/hmwk6$ dd if=/dev/zero of=hmwk6.fs bs=1M count=2
+w4118@w4118:~/hmwk6$ sudo losetup /dev/loop0 hmwk6.fs
+w4118@w4118:~/hmwk6$ sudo ./userspace/e2fsprogs/misc/mke2fs -I 256 -t ext4 -L w4118.hmwk6 /dev/loop0
+w4118@w4118:~/hmwk6$ sudo losetup -d /dev/loop0
+
+2) Cross-compile and flash the customed kernel to Nexus 7.
+
+3) Use adb to push the created ext4 file system to /data/misc/:
+w4118@w4118:~/hmwk6$ adb push newFS.fs /datsa/misc/
+
+4) Make and push the userspace program to the device.
+
+5) Install and run the GPSLocator.apk.
+w4118@w4118:~/hmwk6$ adb install GPSLocator.apk
+
+6) Run the daemon.
+w4118@w4118:~/hmwk6$ adb shell /data/misc/gpsd
+
+7) Run the mount script.
+
+8) Finally, run the test program! oo
+
+FileLoc
+----------
+/data/misc/hmwk6/1
+Latitude:
+40.809131
+Longitude:
+-73.960097
+Accuracy:
+22.016
+Age:
+139308 seconds
+URL:
+http://maps.googleapis.com/maps/api/staticmap?zoom=13&size=800x800&maptype=roadmap&markers=color:blue|label:P|40.809131,-73.960097&sensor=false
+
+/data/misc/hmwk6/2
+Latitude:
+40.809131
+Longitude:
+-73.960097
+Accuracy:
+22.016
+Age:
+139378 seconds
+URL:
+http://maps.googleapis.com/maps/api/staticmap?zoom=13&size=800x800&maptype=roadmap&markers=color:blue|label:P|40.809131,-73.960097&sensor=false
+
+Resources
+----------
+Professor Jason Nieh, TA Mohit, and Shane.
+
