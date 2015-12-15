@@ -4588,41 +4588,13 @@ int ext4_change_inode_journal_flag(struct inode *inode, int val)
 int ext4_set_gps_loc(struct inode *ind)
 {
 	/* local vars */
-	struct ext4_inode_info *ei = EXT4_I(ind);
-	struct gps_kdata *pkdata;
-
-	if (ei == NULL)
-		return -EINVAL;
-
-	ei = EXT4_I(ind);
-	pkdata = &(ei->m_gps);
-
-	printk("[HW6] ext4_set_gps_loc\n");
-	get_gps_data(pkdata);
-
-	mark_inode_dirty(ind);
 	return 0;
 }
 
 int ext4_get_gps_loc(struct inode *ind, struct gps_location *loc)
 {
-	unsigned long age = 0;
-	struct ext4_inode_info *ei = EXT4_I(ind);
-
-	if (ei == NULL)
-		return -EINVAL;
-
-	/* maybe we need sync here ? */
-	printk("[HW6] ext4_get_gps_loc\n");
-
-	memcpy(&loc->latitude,	&ei->m_gps.m_lat, sizeof(double));
-	memcpy(&loc->longitude, &ei->m_gps.m_lon, sizeof(double));
-	memcpy(&loc->accuracy,  &ei->m_gps.m_acc, sizeof(float));
-	memcpy(&age, &ei->m_gps.m_age, sizeof(unsigned long));
-
-	return (int)age;
+	return 0;
 }
-
 
 static int ext4_bh_unmapped(handle_t *handle, struct buffer_head *bh)
 {
