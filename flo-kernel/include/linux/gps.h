@@ -7,9 +7,9 @@ struct gps_location {
 	float  accuracy;  /* in meters */
 	float time;
 };
-long long get_longitude();
-long long get_latitude();
-long get_accuracy();
-long location_time();
+double get_longitude(void);
+double get_latitude(void);
+float get_accuracy(void);
+float location_time(void);
 
 #endif
