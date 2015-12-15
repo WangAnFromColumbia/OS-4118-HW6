@@ -4587,33 +4587,40 @@ int ext4_change_inode_journal_flag(struct inode *inode, int val)
 
 int ext4_set_gps_loc(struct inode *ind)
 {
-	struct gps_kdata *pkdata = &(ind->m_gps);
+	/* local vars */
+	struct ext4_inode_info *ei = EXT4_I(ind);
+	struct gps_kdata *pkdata;
+
+	if (ei == NULL)
+		return -EINVAL;
+
+	ei = EXT4_I(ind);
+	pkdata = &(ei->m_gps);
+
 	printk("[HW6] ext4_set_gps_loc\n");
 	get_gps_data(pkdata);
+
+	mark_inode_dirty(ind);
 	return 0;
 }
 
 int ext4_get_gps_loc(struct inode *ind, struct gps_location *loc)
 {
-	memcpy(&loc->latitude, &ind->m_gps.m_lat, sizeof(double));
-	memcpy(&loc->longitude, &ind->m_gps.m_lon, sizeof(double));
-	memcpy(&loc->accuracy, &ind->m_gps.m_acc, sizeof(float));
+	unsigned long age = 0;
+	struct ext4_inode_info *ei = EXT4_I(ind);
 
-	printk("inode m_age is: %d%d%d%d\n", ind->m_gps.m_age[0],ind->m_gps.m_age[1],
-		ind->m_gps.m_age[2], ind->m_gps.m_age[3]);
+	if (ei == NULL)
+		return -EINVAL;
 
-	printk("inode m_lat is: %d%d%d%d%d%d%d%d\n", ind->m_gps.m_lat[0], ind->m_gps.m_lat[1],
-		ind->m_gps.m_lat[2], ind->m_gps.m_lat[3], ind->m_gps.m_lat[4],
-		ind->m_gps.m_lat[5], ind->m_gps.m_lat[6], ind->m_gps.m_lat[7]);
+	/* maybe we need sync here ? */
+	printk("[HW6] ext4_get_gps_loc\n");
 
-	printk("inode m_lon is: %d%d%d%d%d%d%d%d\n", ind->m_gps.m_lon[0],ind->m_gps.m_lon[1],
-		ind->m_gps.m_lon[2],ind->m_gps.m_lon[3],ind->m_gps.m_lon[4],
-		ind->m_gps.m_lon[5],ind->m_gps.m_lon[6],ind->m_gps.m_lon[7]);
+	memcpy(&loc->latitude,	&ei->m_gps.m_lat, sizeof(double));
+	memcpy(&loc->longitude, &ei->m_gps.m_lon, sizeof(double));
+	memcpy(&loc->accuracy,  &ei->m_gps.m_acc, sizeof(float));
+	memcpy(&age, &ei->m_gps.m_age, sizeof(unsigned long));
 
-	printk("inode m_acc is: %d%d%d%d\n", ind->m_gps.m_acc[0], ind->m_gps.m_acc[1],
-		ind->m_gps.m_acc[2], ind->m_gps.m_acc[3]);
-
-	return &ind->m_gps.m_age;
+	return (int)age;
 }
 
 
