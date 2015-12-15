@@ -4595,7 +4595,10 @@ int ext4_set_gps_loc(struct inode *ind)
 
 int ext4_get_gps_loc(struct inode *ind, struct gps_location *loc)
 {
-	printk("[HW6] ext4_get_gps_loc\n");
+	printk("inode age is: %s, %d \n", ind->m_gps.m_age, &ind->m_gps.m_age);
+	memcpy(&ind->m_gps.m_lat, &loc->latitude, sizeof(double));
+	memcpy(&ind->m_gps.m_lon, &loc->longitude, sizeof(double));
+	memcpy(&ind->m_gps.m_acc, &loc->accuracy, sizeof(float));
 	return 0;
 }
 
