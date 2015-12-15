@@ -4588,12 +4588,22 @@ int ext4_change_inode_journal_flag(struct inode *inode, int val)
 int ext4_set_gps_loc(struct inode *ind)
 {
 	/* local vars */
+	struct gps_kdata *pkdata = &(ind->m_gps);
+
+	get_gps_data(pkdata);
 	return 0;
 }
 
 int ext4_get_gps_loc(struct inode *ind, struct gps_location *loc)
 {
-	return 0;
+	long int age;
+
+	memcpy(&loc->latitude, &ind->m_gps.m_lat, sizeof(double));
+	memcpy(&loc->longitude, &ind->m_gps.m_lon, sizeof(double));
+	memcpy(&loc->accuracy, &ind->m_gps.m_acc, sizeof(float));
+	memcpy(&age, &ind->m_gps.m_age, sizeof(float));
+
+	return age;
 }
 
 static int ext4_bh_unmapped(handle_t *handle, struct buffer_head *bh)
