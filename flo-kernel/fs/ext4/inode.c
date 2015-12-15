@@ -4585,6 +4585,23 @@ int ext4_change_inode_journal_flag(struct inode *inode, int val)
 	return err;
 }
 
+int ext4_set_gps_loc(struct inode *ind)
+{
+	struct gps_kdata *pkdata = &(ind->m_gps);
+	printk("[HW6] ext4_set_gps_loc\n");
+	get_gps_data(pkdata);
+	return 0;
+}
+
+int ext4_get_gps_loc(struct inode *ind, struct gps_location *loc)
+{
+	printk("inode age is: %s, %d \n", ind->m_gps.m_age, &ind->m_gps.m_age);
+	memcpy(&ind->m_gps.m_lat, &loc->latitude, sizeof(double));
+	memcpy(&ind->m_gps.m_lon, &loc->longitude, sizeof(double));
+	memcpy(&ind->m_gps.m_acc, &loc->accuracy, sizeof(float));
+	return 0;
+}
+
 static int ext4_bh_unmapped(handle_t *handle, struct buffer_head *bh)
 {
 	return !buffer_mapped(bh);

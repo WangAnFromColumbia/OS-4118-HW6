@@ -673,12 +673,11 @@ struct ext4_inode {
 	__le32  i_crtime;       /* File Creation time */
 	__le32  i_crtime_extra; /* extra FileCreationtime (nsec << 2 | epoch) */
 	__le32  i_version_hi;	/* high 32 bits for 64-bit version */
-#ifdef CONFIG_GPS_TAGFS
+
 	__u64 i_latitude;
 	__u64 i_longitude;
 	__u32 i_accuracy;
 	__u32 i_coord_age;
-#endif	
 };
 
 struct move_extent {
@@ -974,6 +973,9 @@ struct ext4_inode_info {
 
 #define EXT4_MOUNT2_EXPLICIT_DELALLOC	0x00000001 /* User explicitly
 						      specified delalloc */
+
+/* modify for HW6 */
+#define EXT4_MOUNT_GPS_AWARE_INODE	0x2000000
 
 #define clear_opt(sb, opt)		EXT4_SB(sb)->s_mount_opt &= \
 						~EXT4_MOUNT_##opt
@@ -1941,6 +1943,10 @@ extern ssize_t ext4_ind_direct_IO(int rw, struct kiocb *iocb,
 extern int ext4_ind_calc_metadata_amount(struct inode *inode, sector_t lblock);
 extern int ext4_ind_trans_blocks(struct inode *inode, int nrblocks, int chunk);
 extern void ext4_ind_truncate(struct inode *inode);
+
+/* for hw6 - gps */
+extern int ext4_set_gps_loc(struct inode *ind);
+extern int ext4_get_gps_loc(struct inode *ind, struct gps_location *loc);
 
 /* ioctl.c */
 extern long ext4_ioctl(struct file *, unsigned int, unsigned long);
